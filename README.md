@@ -7,17 +7,20 @@ AI-powered automation system for family office operations.
 Message classification (5 categories)
 RAG-based SOP search (ChromaDB)
 Automated task creation (Todoist)
-Audit logging (PostgreSQL)
+Audit logging (PostgreSQL - Neon)
 n8n workflow orchestration
 
 ## Tech Stack
 
+- **Input:** Webhook (WhatsApp, Email)
 - **Backend:** Python 3.11 + FastAPI
 - **AI:** Claude 3.5 Sonnet
 - **Vector DB:** ChromaDB
 - **Task Management:** Todoist API
 - **Database:** PostgreSQL (Neon)
 - **Orchestration:** n8n
+- **Audit:** PostgreSQL
+
 
 ## Setup
 
@@ -41,7 +44,7 @@ python3 database/sop_loader.py
 
 ### 4. Run API Server
 ```bash
-python3 -m api.main
+python3 -m app.py
 ```
 
 Server runs at `http://localhost:8000`
@@ -64,7 +67,7 @@ Import the workflow from n8n or configure:
 
 ## Architecture
 
-See `architecture.pdf` for complete system design.
+See `solution_architecture.pdf` for complete system design.
 
 ## Trial Day Demo
 
