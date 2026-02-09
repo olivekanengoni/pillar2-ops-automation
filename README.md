@@ -33,8 +33,8 @@ pip install -r requirements.txt
 
 Create `.env` file:
 ```
-TODOIST_API_TOKEN=your_token_here
-DATABASE_URL=your_neon_connection_string
+TODOIST_API_TOKEN=8bdd869b623115c4914428f102e3cd60cd7f4d26
+DATABASE_URL= postgresql://neondb_owner:npg_MgX3BxlHiOm8@ep-lively-water-a1qvt794.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 ```
 
 ### 3. Load SOPs into ChromaDB
