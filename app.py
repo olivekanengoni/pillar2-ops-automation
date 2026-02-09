@@ -1,15 +1,17 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-import chromadb
-import psycopg2
-import os
-from dotenv import load_dotenv
+# Import required libraries
+from fastapi import FastAPI          # Web framework to handle HTTP requests
+from pydantic import BaseModel       # Data validation and parsing for request bodies
+import chromadb                      # Vector database for semantic search (RAG)
+import psycopg2                      # PostgreSQL database adapter
+import os                            # To access environment variables
+from dotenv import load_dotenv       # Load environment variables from a .env file
 
 load_dotenv()
 
 app = FastAPI()
 
-# --- Database (Postgres) ---
+# Database (Postgres)
+# Connect to PostgreSQL using environment variables 
 conn = psycopg2.connect(
     dbname=os.getenv("DB_NAME"),
     user=os.getenv("DB_USER"),
@@ -20,6 +22,7 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
+# Create a table to log incoming requests if it doesn't exist
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS audit_logs (
     id SERIAL PRIMARY KEY,
@@ -30,11 +33,13 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 """)
 conn.commit()
 
-# --- ChromaDB ---
+# ChromaDB Setup
+# Initialize Chroma client and create or get a collection for SOPs
 chroma = chromadb.Client()
 collection = chroma.get_or_create_collection("sop")
 
-# --- Load SOP once (MVP) ---
+# Load SOP once (MVP)
+# This is a sample SOP for demonstration purposes
 SOP_TEXT = """SFO EXPENSES – STANDARD OPERATING PROCEDURE (SOP)
 Company: QUANT LAB SFO FZCO
 Applies to: All purchases made using the SFO (company) card
@@ -96,17 +101,20 @@ Ensure correct payment, correct buyer details, correct billing address, TRN incl
 upload.
 """
 
+# Add the SOP to ChromaDB with a unique ID
 collection.add(
     ids=["sfo_expense_sop"],
     documents=[SOP_TEXT]
 )
 
 
-# --- Request schema ---
+# Request schema 
+# Define expected input structure for /process endpoint
 class Intake(BaseModel):
     message: str
     source: str
 
+#Endpoint to process incoming requests
 @app.post("/process")
 def process_request(data: Intake):
     # RAG lookup
@@ -117,7 +125,7 @@ def process_request(data: Intake):
 
     sop_context = result["documents"][0][0]
 
-    # Simple classification (MVP logic)
+    # Simple classification (MVP logic) based on keyword
     if "expense" in data.message.lower():
         category = "Finance"
         priority = 4
@@ -132,13 +140,14 @@ Relevant SOP:
 {sop_context}
 """
 
-    # Log
+    # Insert request details into Postgres audit log table
     cursor.execute(
         "INSERT INTO audit_logs (source, input, action) VALUES (%s, %s, %s)",
         (data.source, data.message, "processed")
     )
     conn.commit()
-
+    
+# Provide enriched task content, category, and priority
     return {
         "task_content": enriched_text,
         "category": category,
