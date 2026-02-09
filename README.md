@@ -37,17 +37,17 @@ TODOIST_API_TOKEN=8bdd869b623115c4914428f102e3cd60cd7f4d26
 DATABASE_URL= postgresql://neondb_owner:npg_MgX3BxlHiOm8@ep-lively-water-a1qvt794.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 ```
 
-### 3. Load SOPs into ChromaDB
-```bash
-python3 database/sop_loader.py
-```
+### 3. Sample SOP pre-loaded into chromadb
 
-### 4. Run API Server
+
+### 4. Start FASTAPI Server or run on n8n workflow automation (As shown in demo)
+This provides the `/process` endpoint for testing task intake.
+
 ```bash
-python3 -m app.py
-```
+uvicorn app:app --reload
 
 Server runs at `http://localhost:8000`
+
 
 ## API Endpoints
 
