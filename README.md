@@ -1,6 +1,6 @@
 # Pillar 2: Ops Automation Platform
 
-AI-powered automation system for family office operations. Code that connects to email (IMAP) and Slack (webhooks) to capture messages. You store them temporarily in a database. An MCP server that connects to Claude AI, a vector database for storing policies, and logic for routing decisions. ChromaDB for policies, use Todoist's database for tasks, and
+AI-powered automation system for family office operations, including RAG based system. Code that connects to email (IMAP) and Slack (webhooks) to capture messages. You store them temporarily in a database. An MCP server that connects to Claude AI, a vector database for storing policies, and logic for routing decisions. ChromaDB for policies, use Todoist's database for tasks, and
 create simple logs in a PostgreSQL database. Integration with Todoist API, set up automated emails, and create simple scripts for reminders.
 
 ## Features
